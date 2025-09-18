@@ -1,227 +1,136 @@
-# CTF Expert Challenge - Complete Solution (800 Points)
+Difficulté : HARD (800 points)
 
-## Challenge Overview
-- **Difficulty**: EXPERT (800 points)
-- **Estimated Time**: 3-6 hours for advanced players
-- **Skills Required**: Steganography, RSA Cryptography, Reverse Engineering, Network Analysis, Database Forensics, Privilege Escalation
-- **Final Flag**: `ESGISCTF{3l1t3_h4ck3r_m4st3r_0f_4ll_d0m41ns_2025}`
+Flag final : ESGISCTF{3l1t3_h4ck3r_m4st3r_0f_4ll_d0m41ns_2025}
 
-## Connection
-```bash
-ssh eliteuser@localhost -p 2224
-# Password: ESGISCTF{1nter@ct1ve_sh3ll_ch@ll3ng3}
-```
+Connexion
+ssh w4rn1ng@localhost -p 2224
+Mot de passe : ESGISCTF{1nter@ct1ve_sh3ll_ch@ll3ng3}
 
----
-
-## LAYER 1: Steganography
-
-### Step 1.1: Initial Reconnaissance
-```bash
-# Read welcome message
+LAYER 1 : Stéganographie
+Étape 1.1 : Reconnaissance initiale
+# Lire le message de bienvenue
 cat ELITE_CHALLENGE.txt
 
-# Explore steganography directory
+# Explorer le répertoire stéganographie
 cd /opt/challenge/steganography/
 ls -la
-```
 
-### Step 1.2: Decode Hidden Hex Data
-```bash
-# Use the decoder script
+Étape 1.2 : Décoder les données hexadécimales cachées
+# Utiliser le script de décodage
 ./decode_hex.sh
 
-# OR manually decode hex
+# OU décoder manuellement
 cat .hex_data | xxd -r -p
-```
 
-**Expected Output:**
-```
-Hidden message: The cryptography vault has a RSA private-public key pair. Look for the keys in /opt/challenge/cryptography
-```
 
----
+Sortie attendue :
 
-## LAYER 2: Cryptography - RSA Key Reconstruction
+Message caché : Le coffre de cryptographie contient une paire de clés RSA privée-publique. Cherchez les clés dans /opt/challenge/cryptography
 
-### Step 2.1: Examine Crypto Directory
-```bash
+LAYER 2 : Cryptographie - Reconstruction de la clé RSA
+Étape 2.1 : Examiner le répertoire crypto
 cd /opt/challenge/cryptography/
 ls -la
-# Files: key_alpha.pem, key_beta.pem, key_gamma.pem, key_delta.pem, key_epsilon.pem, encrypted_message.bin, reconstruct_key.py
-```
 
-### Step 2.2: Reconstruct RSA Private Key
-```bash
-# Use the Python script
+
+Fichiers présents : key_alpha.pem, key_beta.pem, key_gamma.pem, key_delta.pem, key_epsilon.pem, encrypted_message.bin, reconstruct_key.py
+
+Étape 2.2 : Reconstruire la clé privée RSA
 python3 reconstruct_key.py
 
-# Verify the reconstructed key
+# Vérifier la clé reconstruite
 openssl rsa -in reconstructed_private.pem -check
-```
 
-### Step 2.3: Decrypt the Message
-```bash
+Étape 2.3 : Décrypter le message
 openssl rsautl -decrypt -inkey reconstructed_private.pem -in encrypted_message.bin
-```
 
-**Expected Output:**
-```
-Network analysis required: A hidden service is listening on localhost. Scan for unusual processes and examine the binary in /opt/challenge/reverse_engineering/
-```
 
----
+Sortie attendue :
 
-## LAYER 3: Reverse Engineering
+Analyse réseau requise : Un service caché écoute sur localhost. Scanner les processus inhabituels et examiner le binaire dans /opt/challenge/reverse_engineering/
 
-### Step 3.1: Analyze the Binary
-```bash
+LAYER 3 : Reverse Engineering
+Étape 3.1 : Analyser le binaire
 cd /opt/challenge/reverse_engineering/
 file security_scanner
 strings security_scanner | grep -i secret
-```
 
-### Step 3.2: Find Hidden Functionality
-```bash
-# Look for interesting strings
+Étape 3.2 : Trouver la fonctionnalité cachée
 strings security_scanner | grep "show_secrets"
 
-# Try the secret command
+# Tester la commande secrète
 ./security_scanner show_secrets
-```
 
-**Expected Output:**
-```
-🎉 BACKDOOR ACTIVATED! 🎉
-Network Analysis Hint:
-- A Python service is running on localhost:8888
-- Use 'netstat -tlnp' or 'ss -tlnp' to confirm
-- Connect with: nc localhost 8888
-- The service requires a specific password
-- Password hint: Look in the database files
-```
 
----
+Sortie attendue :
 
-## LAYER 4: Network Analysis
+BACKDOOR ACTIVÉ
+Indice Analyse Réseau :
+- Un service Python fonctionne sur localhost:8888
+- Utiliser 'netstat -tlnp' ou 'ss -tlnp' pour confirmer
+- Connexion : nc localhost 8888
+- Le service nécessite un mot de passe spécifique
+- Indice mot de passe : consulter les fichiers de la base de données
 
-### Step 4.1: Scan for Hidden Service
-```bash
-# Check for listening services
+LAYER 4 : Analyse Réseau
+Étape 4.1 : Scanner le service caché
 netstat -tlnp | grep 8888
-# OR
+# OU
 ss -tlnp | grep 8888
-```
 
-### Step 4.2: Connect to Hidden Service
-```bash
+Étape 4.2 : Se connecter au service caché
 nc localhost 8888
-```
 
-**Service will ask for access code. We need to find it in the database first.**
 
----
+Le service demandera un code d'accès. Il faut le trouver dans la base de données.
 
-## LAYER 5: Database Forensics
-
-### Step 5.1: Examine Database
-```bash
+LAYER 5 : Forensique Base de Données
+Étape 5.1 : Examiner la base
 cd /opt/challenge/database/
 sqlite3 vault_database.db
-```
 
-### Step 5.2: Extract Access Code
-```sql
+Étape 5.2 : Extraire le code d'accès
 .tables
 SELECT * FROM access_codes;
 SELECT * FROM vault_info;
 .quit
-```
 
-**Found access code:** `admin_secure_2025`
 
-### Step 5.3: Access Hidden Service
-```bash
+Code d'accès trouvé : admin_secure_2025
+
+Étape 5.3 : Accéder au service caché
 nc localhost 8888
-# Enter: admin_secure_2025
-```
+# Entrer : admin_secure_2025
 
-**Service Response:**
-```
-Access GRANTED!
-Final Challenge Information:
-The ultimate flag is encrypted with AES-256-CBC
-Key: master_key_quantum_2025
-Encrypted flag location: /root/.vault/final_flag.enc
-You need root access to read it!
-Hint: Use the security_scanner binary for privilege escalation
-```
 
----
+Réponse du service :
 
-## LAYER 6: Privilege Escalation
+Accès ACCORDÉ
+Informations sur le challenge final :
+Le flag ultime est chiffré en AES-256-CBC
+Clé : master_key_quantum_2025
+Emplacement du flag chiffré : /root/.vault/final_flag.enc
+Il faut un accès root pour le lire !
+Indice : utiliser le binaire security_scanner pour escalade de privilèges
 
-### Step 6.1: Exploit Buffer Overflow
-```bash
+LAYER 6 : Escalade de Privilèges
+Étape 6.1 : Exploiter le buffer overflow
 cd /opt/challenge/reverse_engineering/
 
-# The binary is SUID and has buffer overflow
-# Create a payload to overflow the buffer
+# Le binaire est SUID et contient un buffer overflow
+# Créer un payload pour dépasser le buffer
 python3 -c "print('A' * 100)" | ./security_scanner
 
-# OR use the secret backdoor for easier root access
+# OU utiliser le backdoor secret pour un accès root direct
 ./security_scanner show_secrets
-# This gives you a root shell directly
-```
 
-### Step 6.2: Get Final Flag
-```bash
-# Now with root access
+Étape 6.2 : Récupérer le flag final
+# Avec l'accès root
 cat /root/.vault/final_flag.enc
 
-# Decrypt with the key from database
+# Décrypter avec la clé trouvée dans la base de données
 echo "master_key_quantum_2025" > /tmp/key
 openssl enc -d -aes-256-cbc -k "master_key_quantum_2025" -base64 -in /root/.vault/final_flag.enc
-```
 
-**Final Flag:** `ESGISCTF{3l1t3_h4ck3r_m4st3r_0f_4ll_d0m41ns_2025}`
 
----
-
-## Alternative Methods
-
-### Method A: Buffer Overflow Exploitation
-```bash
-# Generate cyclic pattern
-python3 -c "
-pattern = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' * 10
-print(pattern)
-" > payload.txt
-
-# Test with GDB for exact offset
-gdb ./security_scanner
-```
-
-### Method B: Database Base64 Decoding
-```bash
-# Decode base64 values in database
-echo "bWFzdGVyX2tleV9xdWFudHVtXzIwMjU=" | base64 -d
-echo "VGhlIGZpbmFsIGZsYWcgaXMgaGlkZGVuIGluIC9yb290Ly52YXVsdC8=" | base64 -d
-```
-
----
-
-## Challenge Statistics
-
-- **Total Steps**: ~25 commands
-- **Layers Completed**: 6 security layers
-- **Techniques Used**: 
-  - Hex decoding
-  - RSA cryptography
-  - Reverse engineering
-  - Network scanning
-  - SQL queries
-  - Privilege escalation
-  - AES decryption
-
-**Estimated Solve Time**: 3-6 hours for expert players
+Flag final : ESGISCTF{3l1t3_h4ck3r_m4st3r_0f_4ll_d0m41ns_2025}

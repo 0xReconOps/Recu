@@ -15,14 +15,13 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ctf_expert_network
-    # Add capabilities for privilege escalation testing
+
     cap_add:
       - SYS_PTRACE
       - SETUID
       - SETGID
     security_opt:
       - apparmor:unconfined
-    # Resource limits
     deploy:
       resources:
         limits:
