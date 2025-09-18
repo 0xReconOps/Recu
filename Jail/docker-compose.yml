@@ -1,0 +1,32 @@
+services:
+  python-jail-pwn:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: pyjail_pwn_challenge
+    ports:
+      - "2222:22"    # SSH access
+      - "9999:9999"  # Python jail service
+    hostname: pyjail-pwn
+    restart: unless-stopped
+    environment:
+      - TERM=xterm-256color
+      - DEBIAN_FRONTEND=noninteractive
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - pyjail_network
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
+
+networks:
+  pyjail_network:
+    driver: bridge
+    name: pyjail_network

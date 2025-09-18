@@ -1,0 +1,33 @@
+🐍 PYTHON JAIL CHALLENGE (500 POINTS)
+====================================
+
+Welcome to the Python Jail pwn challenge!
+
+📝 DESCRIPTION:
+This challenge presents a restricted Python environment (sandbox) where many 
+dangerous functions and modules are blacklisted. Your goal is to escape the 
+jail and read the flag from /opt/pyjail/flag.txt
+
+🎯 OBJECTIVE:
+Bypass the Python sandbox restrictions and execute code that reads the flag file.
+
+🔌 CONNECTION METHODS:
+1. SSH: ssh pwnuser@localhost -p 2222 (password: jail2024)
+2. Direct: nc localhost 9999
+
+🛠️ AVAILABLE COMMANDS:
+- help: Show hints
+- builtins: Show available functions
+- exit: Quit the jail
+
+💡 CHALLENGE HINTS:
+- The jail blocks many functions like 'import', 'open', 'exec', etc.
+- String-based filtering is applied
+- AST validation prevents some bypasses
+- But Python's object model is very flexible...
+- Think about inheritance, class methods, and built-in objects
+- Consider alternative ways to access the filesystem
+
+🏁 FLAG LOCATION: /opt/pyjail/flag.txt
+
+Good luck, and happy jail breaking! 🔓
