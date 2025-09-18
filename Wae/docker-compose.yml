@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  ctf-ssh-challenge:
+    build: .
+    container_name: ctf_ssh_restricted
+    ports:
+      - "2222:22"
+    hostname: ctf-challenge
+    restart: unless-stopped
+    environment:
+      - TERM=xterm
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - ctf_network
+
+networks:
+  ctf_network:
+    driver: bridge

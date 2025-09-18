@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  ctf-elite-challenge:
+    build: .
+    container_name: ctf_elite_advanced
+    ports:
+      - "2223:22"    # SSH access
+      - "3000:3000"  # Web service (vulnerable)
+    hostname: elite-challenge
+    restart: unless-stopped
+    environment:
+      - TERM=xterm-256color
+      - NODE_ENV=production
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - ctf_elite_network
+    # Add capabilities for privilege escalation testing
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+
+networks:
+  ctf_elite_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24

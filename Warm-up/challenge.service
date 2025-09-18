@@ -1,0 +1,14 @@
+[Unit]
+Description=CTF Elite Challenge Web Service
+After=network.target
+
+[Service]
+Type=simple
+User=eliteuser
+WorkingDirectory=/opt/challenge
+ExecStart=/usr/bin/node web_service.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
